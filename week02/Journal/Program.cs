@@ -1,4 +1,4 @@
-using System;
+using System.IO;
 
 public class Entry
 {
@@ -65,7 +65,7 @@ class Journal
     public void LoadFromFile(string file)
     {
         _entries.Clear();
-        string[] lines = File.ReadAllLines(file);
+        string[] lines = System.IO.File.ReadAllLines(file);
         foreach(string line in lines)
         {
             string[] parts = line.Split('|');
@@ -99,7 +99,8 @@ class Program
                 string prompt = promptGenerator.GetRandomPrompt();
                 Console.WriteLine(prompt);
                 string entryText = Console.ReadLine();
-                string date = DateTime.Now.ToString("yyyy-MM-dd");
+                DateTime theCurrentTime = DateTime.Now;
+                string date = theCurrentTime.ToShortDateString();
                 Entry entry = new Entry(date, prompt, entryText);
                 journal.AddEntry(entry);
             }
