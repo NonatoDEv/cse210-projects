@@ -1,4 +1,4 @@
-using System.IO;
+using System;
 
 public class Entry
 {
@@ -65,7 +65,7 @@ class Journal
     public void LoadFromFile(string file)
     {
         _entries.Clear();
-        string[] lines = System.IO.File.ReadAllLines(file);
+        string[] lines = File.ReadAllLines(file);
         foreach(string line in lines)
         {
             string[] parts = line.Split('|');
