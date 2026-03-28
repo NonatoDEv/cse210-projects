@@ -1,5 +1,8 @@
 using System;
-
+//CREATIVITY AND EXCEEDING REQUIREMENTS:
+//1. Intelligent Hiding Logic: The HideRandomWords method is designed to randomly select ONLY words that are not already hidden. This ensures the program remains efficient and avoids "wasted" turns where the user presses enter but no new words disappear.
+//2. Dynamic Word Formatting: The Word class automatically generates a matching number of underscores based on the specific length of the hidden word, maintaining the visual structure of the scripture.
+//3. Versatile Reference Handling: The Reference class includes multiple constructors and logic to intelligently format the output, handling both single verses (e.g., "John 3:16") and verse ranges (e.g., "Proverbs 3:5-6") seamlessly.
 class Program
 {
     static void Main(string[] args)
