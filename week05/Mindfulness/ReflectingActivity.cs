@@ -9,7 +9,6 @@ public class ReflectingActivity : Activity
     "Think of a time when you overcame self-doubt or a great challenge.",
     "Think of a time when you stood up for someone else."
 };
-
 private List<string> _questions = new List<string>
 {
     "Why was this experience meaningful to you?",
