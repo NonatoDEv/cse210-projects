@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 public class Activity
 {
     //Attributes protected,so they can be used in the derived classes
@@ -24,6 +26,15 @@ public class Activity
         Console.WriteLine("Get ready...");
         ShowSpinner(3);
     }
+    public void ShowCountDown(int seconds)
+{
+    for (int i = seconds; i > 0; i--)
+    {
+        Console.Write(i);
+        Thread.Sleep(1000);
+        Console.Write("\b \b");
+    }
+}
     public void DisplayEndingMessage()
     {
         Console.WriteLine();
