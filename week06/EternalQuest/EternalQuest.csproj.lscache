@@ -56,11 +56,16 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+ChecklistGoal.cs
+EternalGoal.cs
+Goal.cs
+GoalManager.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  EternalQuest.AssemblyInfo.cs
  EternalQuest.GlobalUsings.g.cs
 Program.cs
+SimpleGoal.cs
 
 [metadataReferences]
 ../../../../../../../../Program Files/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/
