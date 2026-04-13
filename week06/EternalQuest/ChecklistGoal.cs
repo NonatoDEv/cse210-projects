@@ -17,6 +17,17 @@ public class ChecklistGoal : Goal
     {
         return _amountCompleted >= _target;
     }
+    public int AmountCompleted 
+    { 
+        get
+        {
+            return _amountCompleted; //the goal manager can read or get
+        } 
+        set
+        {
+            _amountCompleted = value;//the goal manager can write or set
+        } 
+    }
     public override string GetDetailsString()
     {
         return $"{base.GetDetailsString()} -- Currently completed: {_amountCompleted}/{_target}";

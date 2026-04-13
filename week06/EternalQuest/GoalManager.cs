@@ -80,9 +80,65 @@ public class GoalManager
 
     public void SaveGoals()
     {
+        Console.Write("What is the filename for the goal file? ");
+        string fileName = Console.ReadLine();
+        using (StreamWriter outputFile = new StreamWriter(fileName))
+        {
+            outputFile.WriteLine(_score);
+            foreach (Goal goal in _goals)
+            {
+                outputFile.WriteLine(goal.GetStringRepresentation());
+            }
+        }
+    Console.WriteLine("Goals saved successfully!");
     }
     public void LoadGoals()
     {
+        Console.Write("What is the filename for the goal file? ");
+        string fileName = Console.ReadLine();
+        if (!File.Exists(fileName))
+        {
+            Console.WriteLine("File not found.");
+            return;
+        }
+        string[] lines = File.ReadAllLines(fileName);
+        //the first line is the score
+        _score = int.Parse(lines[0]);
+        //clean the current goals list before loading new ones
+        _goals.Clear();
+        // start from 1 to skip the score line
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i];
+            //divide the line into type and data
+            //EG: "SimpleGoal:Kill the dragon,Slay the mighty dragon,100,true"
+            string[] parts = line.Split(':');
+            string goalType = parts[0];
+            string goalData = parts[1];
+            //now, we divide the data by commas to get the individual fields
+            string[] data = goalData.Split(',');
+            // logic to create the correct goal type based on the first part of the line
+            if (goalType == "SimpleGoal")
+            {
+            // SimpleGoal(name, desc, points, isComplete)
+                SimpleGoal sg = new SimpleGoal(data[0], data[1], int.Parse(data[2]));
+                if (bool.Parse(data[3])) sg.RecordEvent(); //if the saved state is complete, we record the event to set it as complete
+                _goals.Add(sg);
+            }
+            else if (goalType == "EternalGoal")
+            {
+                _goals.Add(new EternalGoal(data[0], data[1], int.Parse(data[2])));
+            }
+            else if (goalType == "ChecklistGoal")
+            {
+                // ChecklistGoal(name, desc, points, bonus, target, amountCompleted)
+                ChecklistGoal cg = new ChecklistGoal(data[0], data[1], int.Parse(data[2]), int.Parse(data[3]), int.Parse(data[4]));
+                cg.AmountCompleted = int.Parse(data[5]);
+                _goals.Add(cg);
+                
+            }
+        }
+        Console.WriteLine("Goals loaded successfully!");
     }
     public void RecordEvent()
     {
