@@ -25,9 +25,7 @@ public class GoalManager
             Console.WriteLine("  5. Record Event");
             Console.WriteLine("  6. Quit");
             Console.Write("Select a choice from the menu: ");
-            
             input = Console.ReadLine();
-
             switch (input)
             {
                 case "1":
@@ -76,8 +74,37 @@ public class GoalManager
     }
     public void CreateGoal()
     {
+        Console.WriteLine("The types of Goals are:");
+        Console.WriteLine("  1. Simple Goal");
+        Console.WriteLine("  2. Eternal Goal");
+        Console.WriteLine("  3. Checklist Goal");
+        Console.Write("Which type of goal would you like to create? ");
+        string choice = Console.ReadLine();
+        // starting data collection for all goal types
+        Console.Write("What is the name of your goal? ");
+        string name = Console.ReadLine();
+        Console.Write("What is a short description of it? ");
+        string description = Console.ReadLine();
+        Console.Write("What is the amount of points associated with this goal? ");
+        int points = int.Parse(Console.ReadLine());
+        //based on the goal type choice, we will collect any additional data needed and then create the appropriate goal object and add it to the list
+        if (choice == "1")
+        {
+            _goals.Add(new SimpleGoal(name, description, points));
+        }
+        else if (choice == "2")
+        {
+            _goals.Add(new EternalGoal(name, description, points));
+        }
+        else if (choice == "3")
+        {
+            Console.Write("How many times does this goal need to be accomplished for a bonus? ");
+            int target = int.Parse(Console.ReadLine());
+            Console.Write("What is the bonus for accomplishing it that many times? ");
+            int bonus = int.Parse(Console.ReadLine());
+            _goals.Add(new ChecklistGoal(name, description, points, target, bonus));
+        }   
     }
-
     public void SaveGoals()
     {
         Console.Write("What is the filename for the goal file? ");
@@ -90,7 +117,7 @@ public class GoalManager
                 outputFile.WriteLine(goal.GetStringRepresentation());
             }
         }
-    Console.WriteLine("Goals saved successfully!");
+        Console.WriteLine("Goals saved successfully!");
     }
     public void LoadGoals()
     {
@@ -142,24 +169,31 @@ public class GoalManager
     }
     public void RecordEvent()
     {
-        // 1.show the user the list of goals to choose from
-        ListGoalNames(); 
+        // 1. show the user the list of goals to choose from
+        ListGoalNames();
         Console.Write("Which goal did you accomplish? ");
-        int index = int.Parse(Console.ReadLine()) - 1; // fix the index to be 0-based
-        Goal selectedGoal = _goals[index];
-        // 2. Call the RecordEvent method on the selected goal to update its state
-        selectedGoal.RecordEvent();
-        // 3. Obtain the points earned for this goal (this will be the base points, and we might add a bonus later if it's a checklist goal)
-        int pointsEarned = selectedGoal.Points;
-        // 4. special logic for checklist goals: if the goal is a checklist and it just got completed, we add the bonus points
-        if (selectedGoal is ChecklistGoal checklist && checklist.IsComplete())
+        int index = int.Parse(Console.ReadLine()) - 1;
+        if (index >= 0 && index < _goals.Count)
         {
-            pointsEarned += checklist.Bonus; // Sum the bonus points
-            Console.WriteLine($"EXTRA BONUS! You have earn {checklist.Bonus} extra points for completing the checklist!");
+            Goal selectedGoal = _goals[index];
+            // 2. record the event for the selected goal
+            selectedGoal.RecordEvent();
+            // 3. calculate the points earned for this event (including any bonus points if it's a checklist goal)
+            int pointsEarned = selectedGoal.Points;
+            // 4. if the goal is a checklist goal and it's now complete, add the bonus points
+            if (selectedGoal is ChecklistGoal checklist && checklist.IsComplete())
+            {
+                pointsEarned += checklist.Bonus; // Sum the bonus points
+                Console.WriteLine($"EXTRA BONUS! You have earned {checklist.Bonus} extra points for completing the checklist!");
+            }
+            // 5. refresh the dashboard to show the updated points and goal status
+            _score += pointsEarned;
+            Console.WriteLine($"Congratulations! You have earned {pointsEarned} points!");
+            Console.WriteLine($"You now have {_score} points.");
         }
-        // 5. refresh the dashboard to show the updated points and goal status
-        _score += pointsEarned;
-        Console.WriteLine($"Congratulations! You have earned {pointsEarned} points!");
-        Console.WriteLine($"You now have {_score} points.");
+        else
+        {
+            Console.WriteLine("Invalid goal selection.");
+        }
     }
 }
