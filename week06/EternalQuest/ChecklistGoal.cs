@@ -28,6 +28,13 @@ public class ChecklistGoal : Goal
             _amountCompleted = value;//the goal manager can write or set
         } 
     }
+    public int Bonus
+    {
+        get
+        {
+            return _bonus;
+        }
+    }
     public override string GetDetailsString()
     {
         return $"{base.GetDetailsString()} -- Currently completed: {_amountCompleted}/{_target}";

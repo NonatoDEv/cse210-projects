@@ -142,5 +142,24 @@ public class GoalManager
     }
     public void RecordEvent()
     {
+        // 1.show the user the list of goals to choose from
+        ListGoalNames(); 
+        Console.Write("Which goal did you accomplish? ");
+        int index = int.Parse(Console.ReadLine()) - 1; // fix the index to be 0-based
+        Goal selectedGoal = _goals[index];
+        // 2. Call the RecordEvent method on the selected goal to update its state
+        selectedGoal.RecordEvent();
+        // 3. Obtain the points earned for this goal (this will be the base points, and we might add a bonus later if it's a checklist goal)
+        int pointsEarned = selectedGoal.Points;
+        // 4. special logic for checklist goals: if the goal is a checklist and it just got completed, we add the bonus points
+        if (selectedGoal is ChecklistGoal checklist && checklist.IsComplete())
+        {
+            pointsEarned += checklist.Bonus; // Sum the bonus points
+            Console.WriteLine($"EXTRA BONUS! You have earn {checklist.Bonus} extra points for completing the checklist!");
+        }
+        // 5. refresh the dashboard to show the updated points and goal status
+        _score += pointsEarned;
+        Console.WriteLine($"Congratulations! You have earned {pointsEarned} points!");
+        Console.WriteLine($"You now have {_score} points.");
     }
 }
