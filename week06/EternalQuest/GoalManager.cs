@@ -44,7 +44,7 @@ public class GoalManager
                     RecordEvent();
                     break;
                 case "6":
-                    Console.WriteLine("¡Thanks for working today, see ya!");
+                    Console.WriteLine("Thanks for your hard work today! See you later.");
                     break;
                 default:
                     Console.WriteLine("Invalid option, please try again.");
