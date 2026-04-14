@@ -85,8 +85,7 @@ public class GoalManager
         string name = Console.ReadLine();
         Console.Write("What is a short description of it? ");
         string description = Console.ReadLine();
-        Console.Write("What is the amount of points associated with this goal? ");
-        int points = int.Parse(Console.ReadLine());
+        int points = GetValidInt("What is the amount of points associated with this goal? ");
         //based on the goal type choice, we will collect any additional data needed and then create the appropriate goal object and add it to the list
         if (choice == "1")
         {
@@ -98,10 +97,8 @@ public class GoalManager
         }
         else if (choice == "3")
         {
-            Console.Write("How many times does this goal need to be accomplished for a bonus? ");
-            int target = int.Parse(Console.ReadLine());
-            Console.Write("What is the bonus for accomplishing it that many times? ");
-            int bonus = int.Parse(Console.ReadLine());
+            int target = GetValidInt("How many times does this goal need to be accomplished for a bonus? ");
+            int bonus = GetValidInt("What is the bonus for accomplishing it that many times? ");
             _goals.Add(new ChecklistGoal(name, description, points, target, bonus));
         }   
     }
@@ -130,7 +127,7 @@ public class GoalManager
         }
         string[] lines = File.ReadAllLines(fileName);
         //the first line is the score
-        _score = int.Parse(lines[0]);
+        int.TryParse(lines[0], out _score);
         //clean the current goals list before loading new ones
         _goals.Clear();
         // start from 1 to skip the score line
@@ -140,29 +137,36 @@ public class GoalManager
             //divide the line into type and data
             //EG: "SimpleGoal:Kill the dragon,Slay the mighty dragon,100,true"
             string[] parts = line.Split(':');
+            if (parts.Length <2) continue; //skip any malformed lines
             string goalType = parts[0];
-            string goalData = parts[1];
             //now, we divide the data by commas to get the individual fields
-            string[] data = goalData.Split(',');
+            string[] data = parts[1].Split(',');
             // logic to create the correct goal type based on the first part of the line
             if (goalType == "SimpleGoal")
             {
-            // SimpleGoal(name, desc, points, isComplete)
-                SimpleGoal sg = new SimpleGoal(data[0], data[1], int.Parse(data[2]));
-                if (bool.Parse(data[3])) sg.RecordEvent(); //if the saved state is complete, we record the event to set it as complete
+                // SimpleGoal(name, desc, points, isComplete)
+                int.TryParse(data[2], out int points);
+                SimpleGoal sg = new SimpleGoal(data[0], data[1], points);
+                if (bool.TryParse(data[3], out bool isComplete) && isComplete) 
+                    sg.RecordEvent();
                 _goals.Add(sg);
             }
             else if (goalType == "EternalGoal")
             {
+                // EternalGoal(name, desc, points)
+                int.TryParse(data[2], out int points);
                 _goals.Add(new EternalGoal(data[0], data[1], int.Parse(data[2])));
             }
             else if (goalType == "ChecklistGoal")
             {
                 // ChecklistGoal(name, desc, points, bonus, target, amountCompleted)
-                ChecklistGoal cg = new ChecklistGoal(data[0], data[1], int.Parse(data[2]), int.Parse(data[3]), int.Parse(data[4]));
-                cg.AmountCompleted = int.Parse(data[5]);
+                int.TryParse(data[2], out int points);
+                int.TryParse(data[3], out int bonus);
+                int.TryParse(data[4], out int target);
+                int.TryParse(data[5], out int completed);
+                ChecklistGoal cg = new ChecklistGoal(data[0], data[1], points, target, bonus);
+                cg.AmountCompleted = completed;
                 _goals.Add(cg);
-                
             }
         }
         Console.WriteLine("Goals loaded successfully!");
@@ -172,7 +176,7 @@ public class GoalManager
         // 1. show the user the list of goals to choose from
         ListGoalNames();
         Console.Write("Which goal did you accomplish? ");
-        int index = int.Parse(Console.ReadLine()) - 1;
+        int index = GetValidInt("Which goal did you accomplish? ") - 1;
         if (index >= 0 && index < _goals.Count)
         {
             Goal selectedGoal = _goals[index];
@@ -195,5 +199,18 @@ public class GoalManager
         {
             Console.WriteLine("Invalid goal selection.");
         }
+    }
+    private int GetValidInt(string prompt)
+    {
+        int result;
+        Console.Write(prompt);
+        string input = Console.ReadLine();
+        while (!int.TryParse(input, out result))
+        {
+            Console.WriteLine("Error: Please enter a valid number.");
+            Console.Write(prompt);
+            input = Console.ReadLine();
+        }
+        return result;
     }
 }
