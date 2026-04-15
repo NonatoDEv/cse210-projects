@@ -15,6 +15,6 @@ public class SimpleGoal : Goal
     }
     public override string GetStringRepresentation()
     {
-        return $"SimpleGoal:{ShortName}|{Description}|{Points}|{_isComplete}";
+        return $"{GetType().Name}:{_shortName},{_description},{_points},{_isComplete}";
     }
 }
