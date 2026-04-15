@@ -4,13 +4,14 @@ namespace FitnessCenter
     {
         private int _laps;//exclsive attribute for the Swimming class
 
-        public Swimming(string date, int minutes, int laps) : base(date, minutes)
+        public Swimming(string date, int minutes, int laps, bool isMetric) : base(date, minutes, isMetric) //a correct order to call the base constructor
         {
             _laps = laps;
         }
         public override double GetDistance()
         {
-            return (_laps * 50) / 1000.0;
+            double distKm = (_laps * 50) / 1000.0;
+            return _isMetric ? distKm : distKm * 0.621371;
         }
         public override double GetSpeed()
         {

@@ -5,7 +5,7 @@ namespace FitnessCenter
     public class Cycling : Activity//aplying inheritance to the Activity class
     {
         private double _speed;//exclusive attribute for the Cycling class
-        public Cycling(string date, int minutes, double speed) : base(date, minutes) //a correct order to call the base constructor
+        public Cycling(string date, int minutes, double speed, bool isMetric) : base(date, minutes, isMetric) //a correct order to call the base constructor
         {
             _speed = speed;
         }

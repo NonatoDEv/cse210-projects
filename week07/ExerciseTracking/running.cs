@@ -5,7 +5,7 @@ namespace FitnessCenter
     public class Running : Activity//inheriting from the Activity class
     {
         private double _distance;//exclusive attribute for the Running class
-        public Running(string date, int minutes, double distance) : base(date, minutes)// a correct order to call the base constructor
+        public Running(string date, int minutes, double distance, bool isMetric) : base(date, minutes, isMetric)// a correct order to call the base constructor
         {
             _distance = distance;
         }

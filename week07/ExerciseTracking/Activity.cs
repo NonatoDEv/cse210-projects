@@ -6,6 +6,9 @@ namespace FitnessCenter
         private string _date;
         private int _minutes;
         protected bool _isMetric;
+        private string GetDistanceUnit() => _isMetric ? "km" : "miles";
+        private string GetSpeedUnit() => _isMetric ? "kph" : "mph";
+        private string GetPaceUnit() => _isMetric ? "min per km" : "min per mile";
         public Activity(string date, int minutes, bool isMetric)//the constructor method
         {
             _date = date;
@@ -23,15 +26,12 @@ namespace FitnessCenter
         public abstract double GetDistance();
         public abstract double GetSpeed();
         public abstract double GetPace();
-        private string GetDistanceUnit() => _isMetric ? "km" : "miles";
-        private string GetSpeedUnit() => _isMetric ? "kph" : "mph";
-        private string GetPaceUnit() => _isMetric ? "min per km" : "min per mile";
         public virtual string GetSummary()//applying formatting to the summary
         {
             return $"{_date} {this.GetType().Name} ({_minutes} min): " +
-                   $"Distance {GetDistance():0.1} {GetDistanceUnit()}, " +
-                   $"Speed {GetSpeed():0.1} {GetSpeedUnit()}, " +
-                   $"Pace: {GetPace():0.2} {GetPaceUnit()}";
+            $"Dist: {GetDistance():f1} {GetDistanceUnit()} | " +
+            $"Vel: {GetSpeed():f1} {GetSpeedUnit()} | " +
+            $"Pace: {GetPace():f1} {GetPaceUnit()}";
         }
     }
 }
